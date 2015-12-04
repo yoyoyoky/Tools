@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.zyx.yoyo.MainActivity" >
+
+    <item
+        android:id="@+id/action_versioninfo"
+        android:orderInCategory="1"
+        android:showAsAction="never"
+        android:checked="true"
+        android:title="@string/versioninfo"/>
+    <item
+        android:id="@+id/action_flowrank"
+        android:orderInCategory="2"
+        android:showAsAction="never"
+        android:title="@string/flowrank"/>
+    <item
+        android:id="@+id/action_topten"
+        android:orderInCategory="3"
+        android:showAsAction="never"
+        android:title="@string/topten"/>
+
+</menu>

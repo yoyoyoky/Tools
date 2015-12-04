@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="app_name">Flow Counter</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_search">Search</string>
+    <string name="system">系统</string>
+    <string name="thirrdpart">第三方</string>
+    <string name="allapp">全部</string>
+    <string name="appimg">app图标</string>
+    <string name="flowrank">本次流量</string>
+    <string name="topten">流量查询</string>
+    <string name="versioninfo">版本信息</string>
+    <string name="datepicker">时间区间：</string>
+    <string name="startdate">开始时间</string>
+    <string name="enddate">结束时间</string>
+    <string name="to">-</string>
+    <string name="noflow">此时间段无流量消耗！</string>
+    <string name="inputkeyword">请输入关键字</string>
+    
+    
+    <color name="blue">#5CACEE</color>
+    <color name="orange">#FFA500</color>
+    <color name="red">#FF6A6A</color>
+
+</resources>
