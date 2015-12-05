@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:baselineAligned="false"
         android:gravity="center"
         android:orientation="horizontal" >
 
@@ -22,13 +23,14 @@
             <ImageView
                 android:id="@+id/app_icon"
                 android:layout_width="50dp"
-                android:layout_height="50dp" />
+                android:layout_height="50dp"
+                android:contentDescription="@string/installedappicon" />
 
             <TextView
                 android:id="@+id/app_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="app"
+                android:text="@string/installedappname"
                 android:textSize="14sp" />
         </LinearLayout>
 
@@ -43,14 +45,14 @@
                 android:id="@+id/total_flows"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="总：100M"
+                android:text="@string/totalflows"
                 android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/used_days"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="已使用：10天"
+                android:text="@string/usedtendays"
                 android:textSize="20sp" />
         </LinearLayout>
     </LinearLayout>
@@ -58,25 +60,26 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
         android:background="#000" >
     </LinearLayout>
-    
-    <TextView 
+
+    <TextView
         android:id="@+id/no_flow"
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:gravity="center"
-        android:text="暂无使用数据！"
+        android:text="@string/nouseddatas"
         android:textColor="@color/blue"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <ListView
         android:id="@+id/everyday_flow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="@drawable/line" >
+        android:divider="@drawable/line"
+        android:minHeight="300dp" >
     </ListView>
 
 </LinearLayout>

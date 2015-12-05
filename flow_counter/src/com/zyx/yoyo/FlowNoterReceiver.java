@@ -4,8 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.zyx.app.DataUpdater;
-import com.zyx.app.InstallApk;
+import com.zyx.apkflow.DataUpdater;
+import com.zyx.apkflow.InstallApk;
 
 public class FlowNoterReceiver extends BroadcastReceiver {
 	

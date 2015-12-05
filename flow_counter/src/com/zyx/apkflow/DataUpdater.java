@@ -1,4 +1,4 @@
-package com.zyx.app;
+package com.zyx.apkflow;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -170,14 +170,17 @@ public class DataUpdater {
 			long receive = flow[0];
 			long send = flow[1];
 			
-			total += receive + send;
-			
-			map = new HashMap<String, Object>();
-			map.put("date", df.format(new Date()));
-			map.put("receive", receive);
-			map.put("send", send);
-
-			data.add(map);
+			if(receive > 0 || send > 0){//预防出现 某一天有记录且为0的情况
+				
+				total += receive + send;
+				
+				map = new HashMap<String, Object>();
+				map.put("date", df.format(new Date()));
+				map.put("receive", receive);
+				map.put("send", send);
+				
+				data.add(map);
+			}
 		}
 		
 		// 最后一个值为总流量

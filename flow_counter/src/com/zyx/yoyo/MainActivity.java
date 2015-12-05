@@ -48,10 +48,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.zyx.app.AppInfo;
-import com.zyx.app.DataUpdater;
-import com.zyx.app.FlowInfo;
-import com.zyx.app.InstallApk;
+import com.zyx.apkflow.AppInfo;
+import com.zyx.apkflow.DataUpdater;
+import com.zyx.apkflow.FlowInfo;
+import com.zyx.apkflow.InstallApk;
 import com.zyx.utils.RootChecker;
 import com.zyx.utils.ShellUtils;
 
@@ -68,7 +68,7 @@ public class MainActivity extends Activity {
 	private List<AppInfo> infoList;
 	private InstallApk ia;
 	private FlowInfo mFlowInfo;
-	
+
 	MyAdapter adapter;
 
 	private final int VERSION_PAGE = 0;
@@ -85,7 +85,7 @@ public class MainActivity extends Activity {
 	private final int MSG_SEARCH = 3;
 
 	private static long TOTAL_FLOW = 0;
-	
+
 	private static int COLOR_BLUE = Color.rgb(92, 172, 238);
 	private static int COLOR_ORANGE = Color.rgb(255, 165, 0);
 
@@ -115,7 +115,7 @@ public class MainActivity extends Activity {
 		mClearEditText = (ClearEditText) findViewById(R.id.filter_edit);
 
 		adapter = new MyAdapter(this);
-		
+
 		sendMessage(0);
 
 		appList.setOnItemClickListener(new OnItemClickListenerImpl());
@@ -204,14 +204,14 @@ public class MainActivity extends Activity {
 			}
 			map = new HashMap<String, Object>();
 			map.put("img", infoList.get(i).appIcon);
-			map.put("title", infoList.get(i).appName);
+			map.put("title", (CURRENT_PAGE == TOP_TEN?(" ["+(i+1)+"] "):"")+infoList.get(i).appName);
 			map.put("packName", infoList.get(i).packageName);
 			map.put("pro", 50);
 			map.put("total", "0");
 			map.put("per", "0");
 			if (CURRENT_PAGE == VERSION_PAGE) {
 				map.put("info", infoList.get(i).versionName);
-				if(infoList.get(i).toHide)
+				if (infoList.get(i).toHide)
 					map.put("per", "隐藏");
 				else
 					map.put("per", "显示");
@@ -244,9 +244,9 @@ public class MainActivity extends Activity {
 			// TODO Auto-generated method stub
 			String packageName = (String) mData.get(position).get("packName");
 			String flow = mFlowInfo.getFlowStr(packageName);
-			int index=0;
-			for(int i=0; i<infoList.size();i++){
-				if(infoList.get(i).packageName.equals(packageName)){
+			int index = 0;
+			for (int i = 0; i < infoList.size(); i++) {
+				if (infoList.get(i).packageName.equals(packageName)) {
 					index = i;
 					break;
 				}
@@ -277,12 +277,12 @@ public class MainActivity extends Activity {
 			} else if (CURRENT_PAGE == VERSION_PAGE) {
 				if (RootChecker.isRootSystem()) {
 					if (infoList.get(index).toHide) {
-						ShellUtils.execCommand("pm disable "+packageName, true);
+						ShellUtils.execCommand("pm disable " + packageName, true);
 						infoList.get(index).toHide = false;
 						sendMessage(1);
 						Toast.makeText(context, "该应用已隐藏！", Toast.LENGTH_SHORT).show();
-					} else{
-						ShellUtils.execCommand("pm enable "+packageName, true);
+					} else {
+						ShellUtils.execCommand("pm enable " + packageName, true);
 						infoList.get(index).toHide = true;
 						sendMessage(1);
 						Toast.makeText(context, "该应用已恢复显示！", Toast.LENGTH_SHORT).show();
@@ -355,7 +355,7 @@ public class MainActivity extends Activity {
 			}
 
 			holder.img.setBackground((Drawable) mData.get(position).get("img"));
-			holder.title.setText((highlight((String)mData.get(position).get("title"), mClearEditText.getText().toString())));
+			holder.title.setText((highlight((String) mData.get(position).get("title"), "[0-9]|"+mClearEditText.getText().toString())));
 			if (CURRENT_PAGE == TOP_TEN) {
 
 				holder.info.setVisibility(View.GONE);
@@ -375,9 +375,9 @@ public class MainActivity extends Activity {
 				holder.per.setVisibility(View.VISIBLE);
 
 				holder.info.setText((CharSequence) mData.get(position).get("info"));
-				if(mData.get(position).get("per").equals("显示")){
+				if (mData.get(position).get("per").equals("显示")) {
 					holder.per.setTextColor(COLOR_BLUE);
-				}else{
+				} else {
 					holder.per.setTextColor(COLOR_ORANGE);
 				}
 				holder.per.setText((CharSequence) mData.get(position).get("per"));
@@ -473,7 +473,7 @@ public class MainActivity extends Activity {
 		dialog.show();
 	}
 
-	/**高亮关键字*/
+	/** 高亮关键字 */
 	public static SpannableStringBuilder highlight(String text, String target) {
 		SpannableStringBuilder spannable = new SpannableStringBuilder(text);
 		CharacterStyle span = null;
@@ -488,5 +488,5 @@ public class MainActivity extends Activity {
 		}
 		return spannable;
 	}
-	
+
 }

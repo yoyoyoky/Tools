@@ -21,10 +21,10 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.zyx.app.AppInfo;
-import com.zyx.app.DataUpdater;
-import com.zyx.app.FlowInfo;
-import com.zyx.app.InstallApk;
+import com.zyx.apkflow.AppInfo;
+import com.zyx.apkflow.DataUpdater;
+import com.zyx.apkflow.FlowInfo;
+import com.zyx.apkflow.InstallApk;
 
 public class AppFlowActivity extends Activity {
 

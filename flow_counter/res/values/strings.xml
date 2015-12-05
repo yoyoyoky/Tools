@@ -18,6 +18,11 @@
     <string name="to">-</string>
     <string name="noflow">此时间段无流量消耗！</string>
     <string name="inputkeyword">请输入关键字</string>
+    <string name="nouseddatas">暂无使用数据!</string>
+    <string name="usedtendays">已使用：10天</string>
+    <string name="totalflows">总：100M</string>
+    <string name="installedappname">app</string>
+    <string name="installedappicon">app图标</string>
     
     
     <color name="blue">#5CACEE</color>
