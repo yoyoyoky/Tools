@@ -1,4 +1,4 @@
-package com.zyx.yoyo;
+package com.zyx.view;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -54,6 +54,7 @@ import com.zyx.apkflow.FlowInfo;
 import com.zyx.apkflow.InstallApk;
 import com.zyx.utils.RootChecker;
 import com.zyx.utils.ShellUtils;
+import com.zyx.yoyo.R;
 
 public class MainActivity extends Activity {
 
@@ -69,7 +70,7 @@ public class MainActivity extends Activity {
 	private InstallApk ia;
 	private FlowInfo mFlowInfo;
 
-	MyAdapter adapter;
+	private MyAdapter adapter;
 
 	private final int VERSION_PAGE = 0;
 	private final int FLOW_PAGE = 1;
@@ -89,12 +90,13 @@ public class MainActivity extends Activity {
 	private static int COLOR_BLUE = Color.rgb(92, 172, 238);
 	private static int COLOR_ORANGE = Color.rgb(255, 165, 0);
 
-	DataUpdater du;
+	private DataUpdater du;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
 		initView();
 		context = getApplicationContext();
 		ia = new InstallApk(context);
@@ -204,7 +206,7 @@ public class MainActivity extends Activity {
 			}
 			map = new HashMap<String, Object>();
 			map.put("img", infoList.get(i).appIcon);
-			map.put("title", (CURRENT_PAGE == TOP_TEN?(" ["+(i+1)+"] "):"")+infoList.get(i).appName);
+			map.put("title", (CURRENT_PAGE == TOP_TEN?(+(i+1)+". "):"")+infoList.get(i).appName);
 			map.put("packName", infoList.get(i).packageName);
 			map.put("pro", 50);
 			map.put("total", "0");
@@ -280,12 +282,12 @@ public class MainActivity extends Activity {
 						ShellUtils.execCommand("pm disable " + packageName, true);
 						infoList.get(index).toHide = false;
 						sendMessage(1);
-						Toast.makeText(context, "该应用已隐藏！", Toast.LENGTH_SHORT).show();
+						Toast.makeText(context, "该应用已隐藏,该应用将不会有流量消耗，也不可使用，但会保存已有数据！", Toast.LENGTH_SHORT).show();
 					} else {
 						ShellUtils.execCommand("pm enable " + packageName, true);
 						infoList.get(index).toHide = true;
 						sendMessage(1);
-						Toast.makeText(context, "该应用已恢复显示！", Toast.LENGTH_SHORT).show();
+						Toast.makeText(context, "该应用已恢复显示，可正常使用！", Toast.LENGTH_SHORT).show();
 					}
 				} else {
 					Toast.makeText(context, "对不起，未获得系统权限，无法执行隐藏操作！", Toast.LENGTH_LONG).show();
@@ -295,7 +297,7 @@ public class MainActivity extends Activity {
 				intent.putExtra("packageName", infoList.get(index).packageName);
 				startActivity(intent);
 			}
-		}
+		}		
 	}
 
 	public final class ViewHolder {
@@ -354,8 +356,7 @@ public class MainActivity extends Activity {
 				holder = (ViewHolder) convertView.getTag();
 			}
 
-			holder.img.setBackground((Drawable) mData.get(position).get("img"));
-			holder.title.setText((highlight((String) mData.get(position).get("title"), "[0-9]|"+mClearEditText.getText().toString())));
+			String text="";
 			if (CURRENT_PAGE == TOP_TEN) {
 
 				holder.info.setVisibility(View.GONE);
@@ -366,6 +367,7 @@ public class MainActivity extends Activity {
 
 				holder.pro.setProgress((Integer) mData.get(position).get("pro"));
 				holder.total.setText((CharSequence) mData.get(position).get("total"));
+				text = "^[0-9]+(.)";
 			} else {
 
 				holder.pro.setVisibility(View.GONE);
@@ -381,7 +383,11 @@ public class MainActivity extends Activity {
 					holder.per.setTextColor(COLOR_ORANGE);
 				}
 				holder.per.setText((CharSequence) mData.get(position).get("per"));
+				text = mClearEditText.getText().toString();
 			}
+			
+			holder.img.setBackground((Drawable) mData.get(position).get("img"));
+			holder.title.setText((highlight((String) mData.get(position).get("title"), text)));
 			return convertView;
 		}
 
@@ -487,6 +493,13 @@ public class MainActivity extends Activity {
 			}
 		}
 		return spannable;
+	}
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		du.closeDatabase();
+		super.onDestroy();
 	}
 
 }

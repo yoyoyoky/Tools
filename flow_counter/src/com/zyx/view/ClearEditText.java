@@ -1,4 +1,4 @@
-package com.zyx.yoyo;
+package com.zyx.view;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -12,6 +12,8 @@ import android.view.animation.Animation;
 import android.view.animation.CycleInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.EditText;
+
+import com.zyx.yoyo.R;
 
 public class ClearEditText extends EditText implements OnFocusChangeListener, TextWatcher {
 	/**

@@ -2,7 +2,6 @@ package com.zyx.apkflow;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,7 +14,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.zyx.utils.DataHelper;
 
@@ -31,50 +29,21 @@ public class DataUpdater {
 	public DataUpdater(Context context) {
 
 		mFlowInfo = new FlowInfo(context);
+		
 		// 创建DataHelper对象
 		helper = new DataHelper(context);
 
+		//第一次调用时，会调用DataHelper中的onCreate方法
 		db = helper.getReadableDatabase();
-
-		createTable();
-
+		
 	}
 
-	public boolean tabIsExist(String tabName) {
-		boolean result = false;
-		if (tabName == null) {
-			return false;
-		}
-		Cursor cursor = null;
-		try {
-			String sql = "select count(*) as c from sqlite_master where type ='table' and name ='" + tabName.trim() + "'";
-			cursor = db.rawQuery(sql, null);
-			if (cursor.moveToNext()) {
-				int count = cursor.getInt(0);
-				if (count > 0) {
-					result = true;
-				}
-			}
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		return result;
-	}
-
-	private void createTable() {
-		if (!tabIsExist(FLOW_TABLE)) {
-			// 创建表SQL语句
-			String stu_table = "create table " + FLOW_TABLE + "(_id integer primary key autoincrement,date text,package text,receive long,send log)";
-
-			// 执行SQL语句
-			db.execSQL(stu_table);
-		}
-	}
-
+	/**向数据库插入数据*/
 	public void insertData(ContentValues cv) {
 		db.insert(FLOW_TABLE, null, cv);
 	}
 
+	/**删除数据库数据*/
 	public void deleteData() {
 		String whereClause = "receive=? and send=?";
 		String[] whereArgs = new String[] { "0", "0" };
@@ -191,6 +160,7 @@ public class DataUpdater {
 		return data;
 	}
 
+	/**获取数据库中有记录的所有包名*/
 	public List<String> getPackages() {
 
 		List<String> packagesList = new ArrayList<String>();
@@ -198,7 +168,6 @@ public class DataUpdater {
 		Cursor cursor = db.query(FLOW_TABLE, new String[] { "package" }, null, null, null, null, null);
 		while (cursor.moveToNext())
 			packagesSet.add(cursor.getString(cursor.getColumnIndex("package")));
-		Log.e("===========", "========" + packagesSet.size());
 
 		for (String str : packagesSet)
 			packagesList.add(str);
@@ -206,6 +175,7 @@ public class DataUpdater {
 		return packagesList;
 	}
 
+	/**根据包名及日期，查询数据库数据，若不存在，则返回null*/
 	public long[] queryData(String packageName, String date) {
 
 		String[] columns = new String[] { "receive", "send" };
@@ -223,13 +193,23 @@ public class DataUpdater {
 			return null;
 		}
 	}
-
+	
+	/**根据包名及日期，更新数据库数据*/
 	public void updateData(String packageName, ContentValues cv, String date) {
 		String whereClause = "package=? and date=?";
 		String[] whereArgs = new String[] { packageName, date };
 		db.update(FLOW_TABLE, cv, whereClause, whereArgs);
 	}
+	
+	/**批量更新数据库数据*/
+	public void handleData(List<AppInfo> apps,Date date){
+		String strDate = df.format(date);
+		for (AppInfo a : apps) {
+			handleData(a.packageName, strDate);
+		}
+	}
 
+	/**若数据库中已存在指定包名及日期的数据，则更新数据库数据，否则将该数据插入；同时考虑时间改变时流量使用的日期划分*/
 	public void handleData(String packageName, String date) {
 
 		long[] newFlow = mFlowInfo.getFlow(packageName);
@@ -242,7 +222,7 @@ public class DataUpdater {
 
 			ContentValues cv = new ContentValues();
 
-			if (flag) {
+			if (flag) {//数据库中已有数据
 				cv.put("package", packageName);
 				cv.put("date", date);// 流量消耗日期
 				cv.put("receive", newFlow[0]);
@@ -266,30 +246,32 @@ public class DataUpdater {
 			}
 		}
 	}
-
-	public void handleDataWhenDateChanged(List<AppInfo> apps) {
-		String date = df.format(getLastDay(new Date()));
-		for (AppInfo a : apps) {
-			handleData(a.packageName, date);
+	
+	/**判断数据库表格是否存在*/
+	public boolean tabIsExist(String tabName) {
+		boolean result = false;
+		if (tabName == null) {
+			return false;
 		}
+		Cursor cursor = null;
+		try {
+			String sql = "select count(*) as c from sqlite_master where type ='table' and name ='" + tabName.trim() + "'";
+			cursor = db.rawQuery(sql, null);
+			if (cursor.moveToNext()) {
+				int count = cursor.getInt(0);
+				if (count > 0) {
+					result = true;
+				}
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return result;
 	}
 
-	public void handleDataWhenShutDown(List<AppInfo> apps) {
-		String date = df.format(new Date());
-		for (AppInfo a : apps) {
-			handleData(a.packageName, date);
-		}
-	}
-
+	/**关闭数据库*/
 	public void closeDatabase() {
 		db.close();
-	}
-
-	public static Date getLastDay(Date date) {
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(date);
-		calendar.add(Calendar.DAY_OF_MONTH, -1);
-		return calendar.getTime();
 	}
 
 }

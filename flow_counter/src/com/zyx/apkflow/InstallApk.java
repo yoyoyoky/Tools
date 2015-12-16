@@ -23,6 +23,7 @@ public class InstallApk {
 
 		this.pm = context.getPackageManager();
 
+		//因为有些apk可能被删掉 但是数据还在 所以用GET_UNINSTALLED_PACKAGES 这个flag，而不用0
 		this.packages = pm.getInstalledPackages(PackageManager.GET_UNINSTALLED_PACKAGES);
 		
 		getApk();

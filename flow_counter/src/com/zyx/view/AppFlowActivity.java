@@ -1,4 +1,4 @@
-package com.zyx.yoyo;
+package com.zyx.view;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -25,6 +25,7 @@ import com.zyx.apkflow.AppInfo;
 import com.zyx.apkflow.DataUpdater;
 import com.zyx.apkflow.FlowInfo;
 import com.zyx.apkflow.InstallApk;
+import com.zyx.yoyo.R;
 
 public class AppFlowActivity extends Activity {
 
